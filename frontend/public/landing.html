@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JobTrackr — Smart Job Application Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #07070f;
+      --surface: #11111c;
+      --surface2: #1a1a2e;
+      --border: #2a2a3d;
+      --accent: #6c63ff;
+      --accent2: #ff6584;
+      --accent3: #43e97b;
+      --accent4: #f7b731;
+      --text: #e8e8f0;
+      --muted: #8888aa;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+    /* NAVBAR */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 60px;
+      background: rgba(7,7,15,0.85); backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(108,99,255,0.15);
+    }
+    .nav-logo {
+      font-size: 1.5rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-btn {
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      color: white !important; padding: 10px 24px; border-radius: 10px;
+      font-weight: 600 !important; transition: all 0.3s !important;
+      box-shadow: 0 4px 20px rgba(108,99,255,0.3);
+    }
+    .nav-btn:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 28px rgba(108,99,255,0.5) !important; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      flex-direction: column; text-align: center; padding: 120px 40px 80px;
+      position: relative; overflow: hidden;
+    }
+    .orb { position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none; animation: orbPulse 8s ease-in-out infinite; }
+    .orb1 { width: 600px; height: 600px; background: rgba(108,99,255,0.15); top: -150px; left: -150px; }
+    .orb2 { width: 500px; height: 500px; background: rgba(255,101,132,0.10); bottom: -100px; right: -100px; animation-delay: 3s; }
+    .orb3 { width: 350px; height: 350px; background: rgba(67,233,123,0.07); top: 40%; left: 40%; animation-delay: 5s; }
+    @keyframes orbPulse { 0%,100% { transform: scale(1) translateY(0); } 50% { transform: scale(1.08) translateY(-20px); } }
+
+    .snow-container { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+    .flake { position: absolute; top: -20px; color: rgba(255,255,255,0.55); animation: snowfall linear infinite; }
+    @keyframes snowfall {
+      0% { transform: translateY(-30px) rotate(0deg); opacity: 0; }
+      8% { opacity: 1; } 92% { opacity: 0.6; }
+      100% { transform: translateY(105vh) rotate(400deg); opacity: 0; }
+    }
+
+    .cards-container { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+    .job-card {
+      position: absolute; display: flex; flex-direction: column;
+      padding: 10px 16px; background: rgba(255,255,255,0.03); border: 1px solid;
+      border-radius: 12px; backdrop-filter: blur(6px);
+      animation: slideRight linear infinite; white-space: nowrap; gap: 3px;
+    }
+    @keyframes slideRight {
+      0% { transform: translateX(-250px); opacity: 0; }
+      6% { opacity: 1; } 92% { opacity: 1; }
+      100% { transform: translateX(110vw); opacity: 0; }
+    }
+
+    .hero-content { position: relative; z-index: 10; max-width: 820px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.3);
+      border-radius: 50px; padding: 7px 20px; font-size: 0.85rem; color: #a89dff;
+      font-weight: 500; margin-bottom: 28px; animation: fadeUp 0.7s ease both;
+    }
+    .hero-title {
+      font-size: clamp(3rem, 6.5vw, 5.5rem); font-weight: 900;
+      line-height: 1.08; margin-bottom: 24px; letter-spacing: -1px;
+      animation: fadeUp 0.7s ease 0.1s both;
+    }
+    .grad {
+      background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent4));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-size: 200%; animation: gradShift 4s ease infinite;
+    }
+    @keyframes gradShift { 0%,100% { background-position: 0%; } 50% { background-position: 100%; } }
+    .hero-sub {
+      font-size: 1.15rem; color: var(--muted); line-height: 1.75;
+      max-width: 580px; margin: 0 auto 44px; font-weight: 400;
+      animation: fadeUp 0.7s ease 0.2s both;
+    }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.7s ease 0.3s both; }
+    .btn-launch {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      color: white; padding: 15px 36px; border-radius: 12px;
+      text-decoration: none; font-weight: 700; font-size: 1.05rem;
+      transition: all 0.3s; box-shadow: 0 8px 32px rgba(108,99,255,0.4);
+    }
+    .btn-launch:hover { transform: translateY(-3px); box-shadow: 0 14px 44px rgba(108,99,255,0.55); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--text); padding: 15px 32px;
+      border-radius: 12px; text-decoration: none; font-weight: 500;
+      font-size: 1rem; border: 1px solid var(--border); transition: all 0.3s;
+    }
+    .btn-outline:hover { border-color: var(--accent); background: rgba(108,99,255,0.08); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+
+    .stats-row {
+      display: flex; justify-content: center; gap: 64px;
+      margin-top: 72px; padding-top: 40px; border-top: 1px solid var(--border);
+      position: relative; z-index: 10; animation: fadeUp 0.7s ease 0.4s both; flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-n { font-size: 2.2rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-l { font-size: 0.82rem; color: var(--muted); margin-top: 4px; font-weight: 500; }
+
+    /* SECTIONS */
+    .section { padding: 100px 60px; max-width: 1200px; margin: 0 auto; }
+    .tag {
+      display: inline-block; background: rgba(108,99,255,0.1);
+      border: 1px solid rgba(108,99,255,0.22); color: #a89dff;
+      border-radius: 50px; padding: 5px 16px; font-size: 0.78rem;
+      font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 14px;
+    }
+    .sec-title { font-size: clamp(1.9rem, 3vw, 2.8rem); font-weight: 900; margin-bottom: 14px; letter-spacing: -0.5px; }
+    .sec-title .g { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sec-sub { color: var(--muted); font-size: 1rem; line-height: 1.75; max-width: 520px; margin-bottom: 52px; }
+
+    /* TECH STACK */
+    .tech-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 100px 60px; }
+    .tech-inner { max-width: 1200px; margin: 0 auto; }
+    .cat-label {
+      font-size: 0.85rem; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.1em; margin: 36px 0 14px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .cat-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+    .tech-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 20px; display: flex;
+      align-items: center; gap: 14px; transition: all 0.3s; cursor: default;
+    }
+    .tech-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(108,99,255,0.15); background: rgba(108,99,255,0.06); }
+    .t-icon { font-size: 1.9rem; min-width: 38px; text-align: center; }
+    .t-name { font-size: 0.95rem; font-weight: 700; margin-bottom: 2px; }
+    .t-role { font-size: 0.75rem; color: var(--muted); }
+
+    /* HOW IT WORKS */
+    .steps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .step-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px; position: relative;
+      overflow: hidden; transition: all 0.3s;
+    }
+    .step-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transform: scaleX(0); transition: transform 0.3s;
+    }
+    .step-card:hover { border-color: rgba(108,99,255,0.35); transform: translateY(-5px); box-shadow: 0 14px 40px rgba(108,99,255,0.12); }
+    .step-card:hover::after { transform: scaleX(1); }
+    .step-num { font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, rgba(108,99,255,0.3), rgba(255,101,132,0.2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; line-height: 1; }
+    .step-icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+    .step-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+    .step-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.65; }
+
+    /* SCREENSHOTS */
+    .screenshots-section { padding: 100px 60px; max-width: 1200px; margin: 0 auto; }
+    .screenshots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(560px, 1fr)); gap: 24px; }
+    .screenshot-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; overflow: hidden; transition: all 0.3s;
+    }
+    .screenshot-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 16px 48px rgba(108,99,255,0.2); }
+    .screenshot-label {
+      padding: 14px 20px; font-weight: 700; font-size: 0.9rem;
+      background: var(--surface2); border-bottom: 1px solid var(--border);
+      color: var(--accent); display: flex; align-items: center; gap: 8px;
+    }
+    .screenshot-card img {
+      width: 100%; height: auto; max-height: 380px;
+      object-fit: contain; object-position: top;
+      display: block; background: #0a0a0f; transition: transform 0.4s;
+    }
+    .screenshot-card:hover img { transform: scale(1.02); }
+    .screenshot-desc { padding: 14px 20px; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+    /* AUTHOR */
+    .author-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 100px 60px; }
+    .author-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .author-avatar {
+      width: 120px; height: 120px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.5rem; margin-bottom: 24px; box-shadow: 0 8px 32px rgba(108,99,255,0.35);
+    }
+    .author-name { font-size: 2rem; font-weight: 900; margin-bottom: 8px; }
+    .author-role { color: var(--accent); font-size: 1rem; font-weight: 600; margin-bottom: 16px; }
+    .author-bio { color: var(--muted); font-size: 0.95rem; line-height: 1.75; margin-bottom: 28px; }
+    .author-skills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-tag { background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.25); color: #a89dff; border-radius: 50px; padding: 5px 14px; font-size: 0.8rem; font-weight: 600; }
+    .author-right { display: flex; flex-direction: column; gap: 16px; }
+    .info-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; display: flex; align-items: center; gap: 16px; transition: all 0.3s; }
+    .info-card:hover { border-color: var(--accent); background: rgba(108,99,255,0.06); }
+    .info-icon { font-size: 1.6rem; min-width: 36px; }
+    .info-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+    .info-value { font-size: 0.95rem; font-weight: 600; }
+
+    /* FOOTER */
+    footer { text-align: center; padding: 90px 40px; position: relative; overflow: hidden; }
+    .footer-glow { position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(108,99,255,0.1), transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; }
+    .footer-inner { position: relative; z-index: 1; }
+    .footer-emoji { font-size: 3.5rem; display: block; margin-bottom: 20px; }
+    .footer-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; margin-bottom: 16px; letter-spacing: -0.5px; }
+    .footer-title .g { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .footer-desc { color: var(--muted); font-size: 1rem; line-height: 1.75; max-width: 500px; margin: 0 auto 36px; }
+    .footer-chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 44px; }
+    .chip { background: var(--surface); border: 1px solid var(--border); border-radius: 50px; padding: 7px 18px; font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+    .footer-divider { width: 60px; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); margin: 44px auto 24px; border-radius: 2px; }
+    .footer-copy { color: var(--muted); font-size: 0.85rem; }
+    .footer-copy span { color: var(--accent2); }
+
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .section { padding: 70px 20px; }
+      .tech-section, .author-section { padding: 70px 20px; }
+      .screenshots-section { padding: 70px 20px; }
+      .screenshots-grid { grid-template-columns: 1fr; }
+      .author-inner { grid-template-columns: 1fr; gap: 32px; }
+      .stats-row { gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="#home" class="nav-logo">🎯 JobTrackr</a>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#techstack">Tech Stack</a></li>
+      <li><a href="#working">Working</a></li>
+      <li><a href="#screenshots">Screenshots</a></li>
+      
+      <li><a href="http://localhost:3000" target="_blank" class="nav-btn">Launch App 🚀</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div id="home" class="hero">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    <div class="snow-container" id="snow"></div>
+    <div class="cards-container" id="cards"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">✨ JobTrackr</div>
+      <h1 class="hero-title">
+        Smart Job<br/>
+        <span class="grad">Application Tracker</span>
+      </h1>
+      <p class="hero-sub">
+        A powerful full-stack web app to manage your entire job search —
+        track applications, schedule interviews, get reminders and land your dream job!
+      </p>
+      <div class="hero-btns">
+        <a href="http://localhost:3000" target="_blank" class="btn-launch">🚀 Click Here to Open App</a>
+        <a href="#techstack" class="btn-outline">View Tech Stack →</a>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-n">MERN</div><div class="stat-l">Full Stack</div></div>
+      <div class="stat"><div class="stat-n">JWT</div><div class="stat-l">Secure Auth</div></div>
+      <div class="stat"><div class="stat-n">REST</div><div class="stat-l">API Design</div></div>
+      <div class="stat"><div class="stat-n">6+</div><div class="stat-l">Key Features</div></div>
+      <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Free to Use</div></div>
+    </div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div id="techstack" class="tech-section">
+    <div class="tech-inner">
+      <div class="tag">⚙️ Tech Stack</div>
+      <h2 class="sec-title">Built with <span class="g">Modern Technologies</span></h2>
+      <p class="sec-sub">Every tool was carefully chosen to build a production-ready, scalable and maintainable full-stack application.</p>
+
+      <div class="cat-label">🖥️ Frontend</div>
+      <div class="tech-grid">
+        <div class="tech-card"><div class="t-icon">⚛️</div><div><div class="t-name">React 18</div><div class="t-role">UI Framework</div></div></div>
+        <div class="tech-card"><div class="t-icon">🛣️</div><div><div class="t-name">React Router v6</div><div class="t-role">Page Navigation</div></div></div>
+        <div class="tech-card"><div class="t-icon">📡</div><div><div class="t-name">Axios</div><div class="t-role">HTTP API Calls</div></div></div>
+        <div class="tech-card"><div class="t-icon">📅</div><div><div class="t-name">date-fns</div><div class="t-role">Date Formatting</div></div></div>
+        <div class="tech-card"><div class="t-icon">🍞</div><div><div class="t-name">React Hot Toast</div><div class="t-role">Pop-up Notifications</div></div></div>
+        <div class="tech-card"><div class="t-icon">🎨</div><div><div class="t-name">CSS Variables</div><div class="t-role">Dark Theme</div></div></div>
+        <div class="tech-card"><div class="t-icon">🔤</div><div><div class="t-name">Outfit Font</div><div class="t-role">Google Fonts</div></div></div>
+      </div>
+
+      <div class="cat-label">⚙️ Backend</div>
+      <div class="tech-grid">
+        <div class="tech-card"><div class="t-icon">🟢</div><div><div class="t-name">Node.js</div><div class="t-role">JavaScript Runtime</div></div></div>
+        <div class="tech-card"><div class="t-icon">🚂</div><div><div class="t-name">Express.js</div><div class="t-role">Web Framework</div></div></div>
+        <div class="tech-card"><div class="t-icon">🔑</div><div><div class="t-name">JWT</div><div class="t-role">Authentication Tokens</div></div></div>
+        <div class="tech-card"><div class="t-icon">🔒</div><div><div class="t-name">bcryptjs</div><div class="t-role">Password Hashing</div></div></div>
+        <div class="tech-card"><div class="t-icon">⏰</div><div><div class="t-name">node-cron</div><div class="t-role">Scheduled Reminders</div></div></div>
+        <div class="tech-card"><div class="t-icon">🌐</div><div><div class="t-name">CORS</div><div class="t-role">Cross Origin Requests</div></div></div>
+        <div class="tech-card"><div class="t-icon">🔐</div><div><div class="t-name">dotenv</div><div class="t-role">Environment Variables</div></div></div>
+      </div>
+
+      <div class="cat-label">🗄️ Database</div>
+      <div class="tech-grid">
+        <div class="tech-card"><div class="t-icon">🍃</div><div><div class="t-name">MongoDB</div><div class="t-role">NoSQL Database</div></div></div>
+        <div class="tech-card"><div class="t-icon">🔗</div><div><div class="t-name">Mongoose</div><div class="t-role">ODM & Schemas</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div id="working" class="section">
+    <div class="tag">🔄 How It Works</div>
+    <h2 class="sec-title">Your Job Search <span class="g">Made Simple</span></h2>
+    <p class="sec-sub">From applying to getting hired — here's how JobTrackr helps you at every step of your journey.</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <span class="step-icon">📝</span>
+        <div class="step-title">Register & Login</div>
+        <p class="step-desc">Create your free account securely with email and password. Protected with JWT tokens and bcrypt hashing — fully private and secure.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <span class="step-icon">📋</span>
+        <div class="step-title">Add Applications</div>
+        <p class="step-desc">Add every job you apply to with company name, role, status, priority, salary, location, recruiter contact and personal notes.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <span class="step-icon">🔄</span>
+        <div class="step-title">Track Status</div>
+        <p class="step-desc">Update status as you progress — Applied → Screening → Interview → Offer or Rejected. Filter and search your applications anytime.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <span class="step-icon">📅</span>
+        <div class="step-title">Schedule Interviews</div>
+        <p class="step-desc">Link interviews to applications. Add type, date, time, duration, meeting link and interviewer details — everything in one place.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">05</div>
+        <span class="step-icon">🔔</span>
+        <div class="step-title">Get Reminders</div>
+        <p class="step-desc">In-app notifications alert you 1 day and 1 hour before every interview automatically — so you never miss an important round.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">06</div>
+        <span class="step-icon">📊</span>
+        <div class="step-title">View Dashboard</div>
+        <p class="step-desc">See your full job search at a glance — total applications, interviews scheduled, offers received and upcoming interviews for the week.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOTS -->
+  <div id="screenshots" class="screenshots-section">
+    <div class="tag">📸 Screenshots</div>
+    <h2 class="sec-title">See it <span class="g">in Action</span></h2>
+    <p class="sec-sub">A sneak peek at the clean, modern interface built for real job seekers.</p>
+    <div class="screenshots-grid">
+      <div class="screenshot-card">
+        <div class="screenshot-label">🔐 Login</div>
+        <img src="screenshots/login.png" alt="Login Screenshot" />
+        <p class="screenshot-desc">Secure login with beautiful animated snowfall background</p>
+      </div>
+      <div class="screenshot-card">
+        <div class="screenshot-label">📊 Dashboard</div>
+        <img src="screenshots/dashboard.png" alt="Dashboard Screenshot" />
+        <p class="screenshot-desc">Overview of all applications, stats and upcoming interviews at a glance</p>
+      </div>
+      <div class="screenshot-card">
+        <div class="screenshot-label">📋 Applications</div>
+        <img src="screenshots/applications.png" alt="Applications Screenshot" />
+        <p class="screenshot-desc">Track every job with status, priority, location and filters</p>
+      </div>
+      <div class="screenshot-card">
+        <div class="screenshot-label">📅 Interviews</div>
+        <img src="screenshots/interview.png" alt="Interviews Screenshot" />
+        <p class="screenshot-desc">Schedule and manage all your interview rounds in one place</p>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="footer-glow"></div>
+    <div class="footer-inner">
+      <span class="footer-emoji">🙏</span>
+      <h2 class="footer-title">Thank You for <span class="g">Visiting!</span></h2>
+      <p class="footer-desc">
+        This project was built with passion, dedication and countless hours of learning.
+        Every feature was crafted to solve a real problem — hope it inspires you! 💪
+      </p>
+      <div class="footer-chips">
+        <span class="chip">#MERN Stack</span>
+        <span class="chip">#Full Stack Dev</span>
+        <span class="chip">#React</span>
+        <span class="chip">#Node.js</span>
+        <span class="chip">#MongoDB</span>
+        <span class="chip">#JWT Auth</span>
+        <span class="chip">#Portfolio</span>
+        <span class="chip">#OpenToWork</span>
+      </div>
+      <a href="http://localhost:3000" target="_blank" class="btn-launch">🚀 Launch JobTrackr Now</a>
+      <div class="footer-divider"></div>
+      <p class="footer-copy">Built with <span>❤️</span> by Mounika Balusa &nbsp;|&nbsp; Smart Job Application Tracker &nbsp;|&nbsp; © 2026</p>
+    </div>
+  </footer>
+
+  
+</body>
+</html>
