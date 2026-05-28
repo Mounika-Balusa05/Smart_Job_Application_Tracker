@@ -1,6 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
+const BASE_URL = 'https://smart-job-application-tracker-2yo6.onrender.com';
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -16,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const register = async (name, email, password) => {
-    const res = await axios.post('/api/auth/register', { name, email, password });
+    const res = await axios.post(`${BASE_URL}/api/auth/register`, { name, email, password });
     const userData = res.data.data;
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
@@ -24,7 +26,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
-    const res = await axios.post('/api/auth/login', { email, password });
+    const res = await axios.post(`${BASE_URL}/api/auth/login`, { email, password });
     const userData = res.data.data;
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
