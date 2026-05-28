@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: '/api',
+  baseURL: 'https://smart-job-application-tracker-2yo6.onrender.com/api',
 });
 
 // Automatically attach token to every request
