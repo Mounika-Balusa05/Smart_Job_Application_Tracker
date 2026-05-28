@@ -3,7 +3,7 @@
 
 # 🎯 Smart Job Application Tracker
 
-> **Live App** 👉 [smart-job-application-tracker-wheat.vercel.app](https://smart-job-application-tracker-wheat.vercel.app)
+>🌐 **Live App** 👉 [Click Here to Launch](https://jobtrackr-landing.vercel.app)
 
 ---
 
