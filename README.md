@@ -3,7 +3,8 @@
 
 # 🎯 Smart Job Application Tracker
 
->🌐 **Live App** 👉 [Click Here to Launch](https://jobtrackr-landing.vercel.app)
+>🌐 **Live App** 👉 [Click Here](https://jobtrackr-landing.vercel.app)
+
 
 ---
 
