@@ -19,11 +19,12 @@ So I decided to build a proper full-stack web app to solve this real problem —
 ## ✨ Features
 
 1. 📋 **Track Job Applications** — Add companies, roles, status, priority, location and recruiter details all in one place
-2. 📅 **Interview Scheduler** — Schedule interviews linked to your applications with date, time, type and meeting link
-3. 🔔 **Smart Notifications** — Get automatic in-app alerts 1 day and 1 hour before every interview so you never miss one
-4. 📊 **Dashboard** — See your full job search at a glance — total applications, interviews, offers and upcoming schedule
-5. 🔐 **Secure Authentication** — Register and login safely with JWT tokens and bcrypt password hashing
-6. 🌙 **Dark Mode UI** — Clean, modern dark-themed interface built for comfortable long-term use
+2. 🔍 **Search & Filter** — Search applications by company or role, filter by status and priority instantly
+3. 📅 **Interview Scheduler** — Schedule interviews linked to your applications with date, time, type and meeting link
+4. 🔔 **Smart Notifications** — Get automatic in-app alerts 1 day and 1 hour before every interview so you never miss one
+5. 📊 **Dashboard** — See your full job search at a glance — total applications, interviews, offers and upcoming schedule
+6. 🔐 **Secure Authentication** — Register and login safely with JWT tokens and bcrypt password hashing
+7. 🌙 **Dark Mode UI** — Clean, modern dark-themed interface built for comfortable long-term use
 
 ---
 
@@ -111,7 +112,7 @@ smartapptracker/
 ## 👩‍💻 Author
 
 **Mounika Balusa**
-Full Stack Developer & AI/ML Enthusiast
+Full Stack Developer
 📍 Hyderabad, Telangana, India
 
 > Built with ❤️ as a portfolio project for internship and job applications | © 2026
